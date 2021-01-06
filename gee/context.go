@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-// Context helps monitor the http requst and response
 type Context struct {
 	// origin objects
 	Writer http.ResponseWriter
@@ -29,11 +28,14 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	}
 }
 
+// PostForm parses forms value, which are K-Vs
 func (c *Context) PostForm(key string) string {
-	return c.Req.FormValue(key)
+	val := c.Req.FormValue(key)
+	return val
 }
 
-func (c *Context) Query(key string) string {
+// GetQuery grabs the parameter in the url matching key
+func (c *Context) GetQuery(key string) string {
 	return c.Req.URL.Query().Get(key)
 }
 
@@ -52,6 +54,7 @@ func (c *Context) String(code int, format string, vals ...interface{}) {
 	c.Writer.Write([]byte(fmt.Sprintf(format, vals...)))
 }
 
+// JSON writes a JSON to response
 func (c *Context) JSON(code int, obj interface{}) {
 	c.SetHeader("Content-Type", "application/json")
 	c.Status(code)
@@ -61,6 +64,7 @@ func (c *Context) JSON(code int, obj interface{}) {
 	}
 }
 
+// Data writes data into response
 func (c *Context) Data(code int, data []byte) {
 	c.Status(code)
 	c.Writer.Write(data)

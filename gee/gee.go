@@ -5,6 +5,9 @@ import (
 	"net/http"
 )
 
+// a map to store JSON k-v
+type H map[string]interface{}
+
 // HandlerFunc defines the request handler used bu Gee
 type HandlerFunc func(*Context)
 

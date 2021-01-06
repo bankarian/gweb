@@ -1,3 +1,3 @@
-module gitee.com/gee-web
+module gitee.com/bankarian/gee-web
 
 go 1.15
