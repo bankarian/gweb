@@ -36,7 +36,7 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 // getRoute parses the real time url-path, then
 // return the node in trie as well as the path-parameters
 func (r *router) getRoute(method, path string) (*node, map[string]string) {
-	searchParts := parsePattern(path)
+	realTimeParts := parsePattern(path)
 	params := make(map[string]string)
 	root, ok := r.roots[method]
 
@@ -44,18 +44,18 @@ func (r *router) getRoute(method, path string) (*node, map[string]string) {
 		return nil, nil
 	}
 
-	n := root.search(searchParts, 0)
+	n := root.search(realTimeParts, 0)
 
 	if n != nil {
-		parts := parsePattern(n.pattern)
-		// there may be 2 dynamic url
+		patternParts := parsePattern(n.pattern)
+		// there may be 2 kinds of dynamic url
 		// 1) /.../:param
 		// 2) /.../*srcPath
-		for i, p := range parts {
-			if p[0] == ':' {
-				params[p[1:]] = searchParts[i]
-			} else if p[0] == '*' && len(p) > 1 {
-				params[p[1:]] = strings.Join(searchParts[i:], "/")
+		for i, p := range patternParts {
+			if p[0] == ':' { // 1)
+				params[p[1:]] = realTimeParts[i]
+			} else if p[0] == '*' && len(p) > 1 { // 2)
+				params[p[1:]] = strings.Join(realTimeParts[i:], "/")
 				break
 			}
 		}

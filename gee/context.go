@@ -72,7 +72,7 @@ func (c *Context) JSON(code int, obj interface{}) {
 	}
 }
 
-// Data writes data into response
+// Data writes bytes into response
 func (c *Context) Data(code int, data []byte) {
 	c.Status(code)
 	c.Writer.Write(data)

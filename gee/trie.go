@@ -5,23 +5,26 @@ import (
 	"strings"
 )
 
-// node wraps url-pattern as a trie node
+// node wraps each part of a url-pattern as a trie node,
+// the complete pattern is stored in a leaf
 type node struct {
 	pattern  string
 	part     string
 	children []*node
-	isWild   bool
+	isParam  bool
 }
 
 func (n *node) String() string {
 	return fmt.Sprintf(
-		"node{pattern=%s, part=%s, isWild=%t",
-		n.pattern, n.part, n.isWild,
+		"node{pattern=%s, part=%s, isParam=%t}",
+		n.pattern, n.part, n.isParam,
 	)
 }
 
+// insert registers the pattern into the tires, note that
+// parts is splitted from pattern
 func (n *node) insert(pattern string, parts []string, curLevel int) {
-	if len(parts) == curLevel {
+	if len(parts) == curLevel { // leaf
 		n.pattern = pattern
 		return
 	}
@@ -29,14 +32,15 @@ func (n *node) insert(pattern string, parts []string, curLevel int) {
 	child := n.matchChild(part)
 	if child == nil {
 		child = &node{
-			part:   part,
-			isWild: part[0] == ':' || part[0] == '*',
+			part:    part,
+			isParam: part[0] == ':' || part[0] == '*',
 		}
 		n.children = append(n.children, child)
 	}
 	child.insert(pattern, parts, curLevel+1)
 }
 
+// search returns the leaf that contains the matched pattern
 func (n *node) search(parts []string, curLevel int) *node {
 	if len(parts) == curLevel || strings.HasPrefix(n.part, "*") {
 		if n.pattern == "" {
@@ -57,6 +61,8 @@ func (n *node) search(parts []string, curLevel int) *node {
 	return nil
 }
 
+// travels search the whole trie from n,
+// store the footprints in nodes
 func (n *node) travel(nodes *([]*node)) {
 	if n.pattern != "" {
 		*nodes = append(*nodes, n)
@@ -68,7 +74,7 @@ func (n *node) travel(nodes *([]*node)) {
 
 func (n *node) matchChild(part string) *node {
 	for _, child := range n.children {
-		if child.part == part || child.isWild {
+		if child.part == part || child.isParam {
 			return child
 		}
 	}
@@ -78,7 +84,7 @@ func (n *node) matchChild(part string) *node {
 func (n *node) matchChildren(part string) []*node {
 	nodes := make([]*node, 0)
 	for _, child := range n.children {
-		if child.part == part || child.isWild {
+		if child.part == part || child.isParam {
 			nodes = append(nodes, child)
 		}
 	}
