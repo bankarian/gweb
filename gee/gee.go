@@ -8,10 +8,10 @@ import (
 // a map to store JSON k-v
 type H map[string]interface{}
 
-// HandlerFunc defines the request handler used bu Gee
+// HandlerFunc defines the request handler used by Gee
 type HandlerFunc func(*Context)
 
-// Engine implements the interface of ServeHTTP
+// Engine implements the interface http.Handler
 type Engine struct {
 	router *router
 }
