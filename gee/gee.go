@@ -1,7 +1,6 @@
 package gee
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -11,29 +10,20 @@ type H map[string]interface{}
 // HandlerFunc defines the request handler used by Gee
 type HandlerFunc func(*Context)
 
+
 // Engine implements the interface http.Handler
 type Engine struct {
+	*RouterGroup
 	router *router
+	groups []*RouterGroup // store all groups
 }
 
-// New is the constructor of gee.Engine
-func New() *Engine {
-	return &Engine{router: newRouter()}
-}
-
-func (e *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
-	log.Printf("Route %4s - %s", method, pattern)
-	e.router.addRoute(method, pattern, handler)
-}
-
-// GET adds GET request
-func (e *Engine) GET(path string, handler HandlerFunc) {
-	e.addRoute("GET", path, handler)
-}
-
-// POST defines the method to add POST request
-func (e *Engine) POST(path string, handler HandlerFunc) {
-	e.addRoute("POST", path, handler)
+// NewEngine is the constructor of gee.Engine
+func NewEngine() *Engine {
+	e := &Engine{router: newRouter()}
+	e.RouterGroup = &RouterGroup{engine: e}
+	e.groups = []*RouterGroup{e.RouterGroup}
+	return e
 }
 
 // Run starts a http server
@@ -45,4 +35,3 @@ func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	c := newContext(w, req)
 	e.router.handle(c)
 }
-
