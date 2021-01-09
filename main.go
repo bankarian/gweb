@@ -11,19 +11,19 @@ import (
 
 func main() {
 
-	r := gee.NewEngine()
-	r.Use(middlewares.Logger()) // global middleware Logger
-	r.GET("/", func(c *gee.Context) {
+	engine := gee.New()
+	engine.Use(middlewares.Logger()) // global middleware Logger
+	engine.GET("/", func(c *gee.Context) {
 		c.HTML(http.StatusOK, "<h1>Index Page<h1>")
 	})
-	r.POST("/login", func(c *gee.Context) {
+	engine.POST("/login", func(c *gee.Context) {
 		c.JSON(http.StatusOK, gee.H{
 			"username": c.PostForm("username"),
 			"password": c.PostForm("password"),
 		})
 	})
 
-	v2 := r.Group("/v2")
+	v2 := engine.Group("/v2")
 	v2.Use(func(c *gee.Context) {
 		t := time.Now()
 		c.Fail(http.StatusInternalServerError, "Internal Server Error")
@@ -41,5 +41,5 @@ func main() {
 		})
 	}
 
-	r.Run(":9999")
+	engine.Run(":9999")
 }

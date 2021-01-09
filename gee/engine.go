@@ -19,8 +19,8 @@ type Engine struct {
 	groups []*RouterGroup // store all groups
 }
 
-// NewEngine is the constructor of gee.Engine
-func NewEngine() *Engine {
+// New is the constructor of gee.Engine
+func New() *Engine {
 	e := &Engine{router: newRouter()}
 	e.RouterGroup = &RouterGroup{engine: e}
 	e.groups = []*RouterGroup{e.RouterGroup}

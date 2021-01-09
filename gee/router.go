@@ -80,7 +80,6 @@ func (r *router) handle(c *Context) {
 	if n != nil {
 		c.Params = params // update context
 		key := c.Method + "-" + n.pattern
-		// r.handlers[key](c)
 		// register router handler to context,
 		// so as to execute middlewares first
 		c.handlers = append(c.handlers, r.handlers[key])
