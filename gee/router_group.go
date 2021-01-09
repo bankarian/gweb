@@ -35,3 +35,8 @@ func (g *RouterGroup) GET(path string, handler HandlerFunc) {
 func (g *RouterGroup) POST(path string, handler HandlerFunc) {
 	g.addRoute("POST", path, handler)
 }
+
+// Use adds middlewares to the group
+func (g *RouterGroup) Use(middlewares ...HandlerFunc)  {
+	g.middlewares = append(g.middlewares, middlewares...)
+}
