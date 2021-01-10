@@ -84,7 +84,7 @@ type HandlerFunc func(*Context)
 
 中间件就是在处理服务端真正提供服务之前进行预处理，本质上也可以定义为一个 HandlerFunc，所以需要维护一个 handler 列表，将中间件存储在其中。那么当接收到一个 http 请求后，对应的 handler 添加到 handler 列表中，然后从头顺序执行整个 handler 列表，就达到了先执行中间件再真正处理请求的目的。
 
-中间件列表的维护，由 Context 完成。
+中间件列表的维护，由 Context 和 RouterGroup 完成。
 
 <img src="https://gitee.com/bankarian/picStorage/raw/master/20210109175611.png" width="70%" />
 
