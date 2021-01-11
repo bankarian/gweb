@@ -1,15 +1,13 @@
-package middlewares
+package gee
 
 import (
 	"log"
 	"time"
-
-	"gitee.com/bankarian/gee-web/gee"
 )
 
 
-func Logger() gee.HandlerFunc {
-	return func(c *gee.Context) {
+func Logger() HandlerFunc {
+	return func(c *Context) {
 		t := time.Now()
 		// Process request
 		c.Next()

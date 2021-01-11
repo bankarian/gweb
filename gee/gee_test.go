@@ -6,7 +6,7 @@ import (
 )
 
 func TestNestedGroup(t *testing.T) {
-	e := NewEngine()
+	e := New()
 	v1 := e.Group("/v1")
 	v2 := v1.Group("/v2")
 	v3 := v2.Group("/v3")
