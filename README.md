@@ -88,3 +88,25 @@ type HandlerFunc func(*Context)
 
 <img src="https://gitee.com/bankarian/picStorage/raw/master/20210109175611.png" width="70%" />
 
+## 5、panic 恢复
+
+Go 语言提供了 `recover` 函数来从 panic 中恢复，避免当前 goroutine 直接结束。`recover` 只在 `defer` 任务中生效，所以添加一个中间件，进行错误恢复处理。
+
+```go
+func Recovery() HandlerFunc {
+    return func(c *Context) {
+        defer func() {
+            if err := recover(); err != nil {
+                message := fmt.Sprintf("%s", err)
+                log.Printf("%s\n\n", trace(message))
+                c.Fail(http.StatusInternalServerError, "Internal Server Error")
+            }
+        }()
+        c.Next()
+    }
+}
+```
+
+
+
+<img src="https://gitee.com/bankarian/picStorage/raw/master/20210111155637.png" style="zoom:50%;" width="70%" />
