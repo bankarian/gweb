@@ -4,23 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 )
 
 type Context struct {
 	// origin objects
 	Writer http.ResponseWriter
 	Req    *http.Request
+
 	// request info
 	Path   string
 	Method string
 	Params map[string]string
+
 	// response info
 	StatusCode int
+
 	// middlewares
 	handlers []HandlerFunc
 	index    int
+
 	// engine pointer
 	engine *Engine
+
+	// for concurrency
+	mu sync.RWMutex
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -71,6 +79,10 @@ func (c *Context) Status(code int) {
 }
 
 func (c *Context) SetHeader(key string, val string) {
+	if val == "" {
+		c.Writer.Header().Del(key)
+		return
+	}
 	c.Writer.Header().Set(key, val)
 }
 
