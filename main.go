@@ -14,5 +14,11 @@ func main() {
 		names := []string{"wowow", "lala"}
 		c.String(http.StatusOK, names[100])
 	})
+	g := e.Group("/group")
+	{
+		g.GET("/test", func(c *gee.Context) {
+			c.String(http.StatusOK, "group succeed")
+		})
+	}
 	e.Run(":9999")
 }

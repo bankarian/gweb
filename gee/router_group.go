@@ -6,7 +6,8 @@ import (
 	"path"
 )
 
-
+// RouterGroup wraps up the Route to extend group management,
+// just like a prefix manager
 type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc // support middleware
