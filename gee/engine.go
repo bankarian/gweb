@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// a map to store JSON k-v
+// H a map to store JSON k-v
 type H map[string]interface{}
 
 // HandlerFunc defines the request handler used by Gee
@@ -41,7 +41,7 @@ func (e *Engine) Run(addr string) (err error) {
 	return http.ListenAndServe(addr, e)
 }
 
-// customize render function
+// SetFuncMap customizes render function
 func (e *Engine) SetFuncMap(funcMap template.FuncMap) {
 	e.funcMap = funcMap
 }

@@ -9,7 +9,8 @@ import (
 func newTestRouter() *router {
 	r := newRouter()
 	r.addRoute("GET", "/", nil)
-	r.addRoute("GET", "/hello/:name", nil)
+	r.addRoute("GET", "/greet/people/employee/:name", nil)
+	r.addRoute("GET", "/greet/people/client/:name", nil)
 	r.addRoute("GET", "/assets/*filepath", nil)
 	return r
 }
@@ -25,6 +26,8 @@ func TestParsePattern(t *testing.T) {
 	}
 }
 
+
+
 func TestGetRoutes(t *testing.T) {
 	r := newTestRouter()
 	nodes := r.getRoutes("GET")
@@ -33,5 +36,15 @@ func TestGetRoutes(t *testing.T) {
 	}
 	if len(nodes) != 3 {
 		t.Fatal("the number of routes should be 3")
+	}
+}
+
+func BenchmarkGetRoute(b *testing.B) {
+	r := newTestRouter()
+	// for i := 0; i < b.N; i++ {
+	// 	r.getRoute("GET", "/greet/people/student")
+	// }
+	for i := 0; i < b.N; i++ {
+		r.getRoute("GET", "/greet/people/client/beney")
 	}
 }
